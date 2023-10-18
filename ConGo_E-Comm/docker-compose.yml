@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    image: ecom1
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_PORT=3306
+      - DJANGO_DB_NAME=congo
+      - DJANGO_DB_USER=root
+      - DJANGO_DB_PASSWORD=admin
+    command: ["gunicorn", "ecom.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: congo
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:
